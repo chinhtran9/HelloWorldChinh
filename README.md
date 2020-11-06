@@ -1,2 +1,3 @@
-# HelloWorldChinh
- Hello world chinh
+# maven-project
+
+Simple Maven Project
