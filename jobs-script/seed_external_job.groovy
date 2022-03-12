@@ -4,7 +4,7 @@ job('seed-external-job') {
   }
   steps {
     dsl {
-      external('jobs-script//**/*.groovy')
+      external('jobs-script/external_job.groovy')
     }
   }
 }
