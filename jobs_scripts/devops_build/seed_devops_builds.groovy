@@ -5,7 +5,7 @@ folder(folderName) {
     description('Folder containing all jobs for folder-a')
 }
 
-job(folderName) {
+job(folderName + '/seed_' + folderName) {
   scm {
       git(tfs)
   }
