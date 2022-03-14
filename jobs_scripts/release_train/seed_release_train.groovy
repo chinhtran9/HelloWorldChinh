@@ -11,7 +11,7 @@ job(folderName + '/seed_' + folderName) {
   }
   steps {
     dsl {
-      external('jobs_script/' + folderName + '/*.groovy')
+      external('jobs_scripts/' + folderName + '/*.groovy')
     }
   }
 }
