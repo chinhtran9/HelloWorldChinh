@@ -1,5 +1,5 @@
 def folderName = 'release_train'
-def tfs = 'https://github.com/figaw/freestyle-to-pipeline-jenkins.git'
+def tfs = 'https://github.com/chinhtran9/HelloWorldChinh.git'
 
 folder(folderName) {
     description('Release train jobs')
