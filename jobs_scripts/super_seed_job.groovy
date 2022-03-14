@@ -7,7 +7,7 @@ job(superSeedJobName) {
   }
   steps {
     dsl {
-      external('jobs_script/*.groovy')
+      external('jobs_scripts/*.groovy')
     }
   }
 }
