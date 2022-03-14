@@ -10,3 +10,4 @@ job(superSeedJobName) {
       external('jobs_script/*.groovy')
     }
   }
+}
