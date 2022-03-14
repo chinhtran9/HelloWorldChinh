@@ -14,3 +14,4 @@ job(folderName + '/seed_' + folderName) {
       external('jobs_script/' + folderName + '/*.groovy')
     }
   }
+}
