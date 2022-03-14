@@ -1,14 +1,17 @@
-folder('container-folder') {
+def folderName = 'devops_builds'
+def tfs = 'https://github.com/figaw/freestyle-to-pipeline-jenkins.git'
+
+folder(folderName) {
     description('Folder containing all jobs for folder-a')
 }
 
-job('container-folder/seed-external-job') {
+job(folderName) {
   scm {
-      git('https://github.com/chinhtran9/HelloWorldChinh.git')
+      git(tfs)
   }
   steps {
     dsl {
-      external('jobs-script/external_job.groovy')
+      external('jobs_script/' + folderName + '/hello_world_external_1.groovy')
+      external('jobs_script/' + folderName + '/hello_world_external_2.groovy')
     }
   }
-}
