@@ -1,4 +1,4 @@
-def folderName = 'devops_builds'
+def folderName = 'devops_build'
 def tfs = 'https://github.com/chinhtran9/HelloWorldChinh.git'
 
 folder(folderName) {
@@ -11,7 +11,7 @@ job(folderName + '/seed_' + folderName) {
   }
   steps {
     dsl {
-      external('jobs_script/' + folderName + '/*.groovy')
+      external('jobs_scripts/' + folderName + '/*.groovy')
     }
   }
 }
