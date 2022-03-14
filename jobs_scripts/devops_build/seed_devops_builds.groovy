@@ -1,5 +1,5 @@
 def folderName = 'devops_builds'
-def tfs = 'https://github.com/figaw/freestyle-to-pipeline-jenkins.git'
+def tfs = 'https://github.com/chinhtran9/HelloWorldChinh.git'
 
 folder(folderName) {
     description('Folder containing all jobs for folder-a')
