@@ -1,4 +1,4 @@
-def folderName = 'devops-builds'
+def folderName = 'devops_builds'
 def tfs = 'https://github.com/figaw/freestyle-to-pipeline-jenkins.git'
 
 folder(folderName) {
@@ -11,7 +11,8 @@ job(folderName) {
   }
   steps {
     dsl {
-      external('jobs-script/' + folderName + '/hello_world_external.groovy')
+      external('jobs_script/' + folderName + '/hello_world_external_1.groovy')
+      external('jobs_script/' + folderName + '/hello_world_external_2.groovy')
     }
   }
 }
