@@ -1,0 +1,1 @@
+def devops_build_folder = 'devops_build'
