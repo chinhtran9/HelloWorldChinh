@@ -11,6 +11,10 @@ job(folderName + '/seed_' + folderName) {
   }
   steps {
     dsl {
+
+      GroovyShell shell = new GroovyShell()
+      def script = shell.parse(new File('/jobs_scripts/variables.groovy'))
+      echo(script.devops_build_Folder + ' dffd ')
       external('jobs_scripts/' + folderName + '/*.groovy')
     }
   }
