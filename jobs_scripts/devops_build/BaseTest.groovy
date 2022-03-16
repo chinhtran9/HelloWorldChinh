@@ -1,3 +1,3 @@
-abstract class BaseTest extends Script {
-    def meaningOfLife = devops_build
+def myUtilityMethod(String msg) {
+    println "myUtilityMethod running with: ${msg}"
 }
