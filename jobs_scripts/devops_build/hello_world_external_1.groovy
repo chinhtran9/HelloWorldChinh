@@ -1,5 +1,5 @@
 import groovy.transform.BaseScript
-@BaseScript MainScript mainScript
+@BaseScript BaseTest mainScript
 
 def folderName = 'devops_build'
 def tfs = 'https://github.com/chinhtran9/HelloWorldChinh.git'

@@ -12,7 +12,7 @@ job(superSeedJobName) {
   steps {
     dsl {
       GroovyShell shell = new GroovyShell()
-      def var = shell.parse(new File('variables.groovy'))
+      def var = shell.parse(new File(external('jobs_scripts/variables.groovy')))
       echo(var.devops_build_folder + "  -----")
       external('jobs_scripts/*.groovy')
     }
