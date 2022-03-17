@@ -1,6 +1,6 @@
 evaluate(new File("BaseTest.groovy"))
 // Safer to use 'def' here as Groovy seems fussy about whether the filename (and therefore implicit class name) has a capital first letter
-def tu = new Testutils()
+def tu = new BaseTest()
 tu.myUtilityMethod("hello world")
 
 
