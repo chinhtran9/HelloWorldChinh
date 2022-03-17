@@ -1,1 +1,0 @@
-devops_build_Folder = 'devops_build'
