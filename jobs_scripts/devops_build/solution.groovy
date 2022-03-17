@@ -1,5 +1,5 @@
 // Provided for completeness
-
+def folderName = 'devops_build'
 def jobconfig = """
 <flow-definition plugin="workflow-job@2.40">
   <actions>
@@ -100,7 +100,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job('solution') {
+job(folderName + '/solution') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->
