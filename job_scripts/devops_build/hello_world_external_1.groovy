@@ -7,7 +7,7 @@ def jobName = StackTraceUtils.deepSanitize(new Exception()).getStackTrace().last
 println(StackTraceUtils.deepSanitize(new Exception()).getStackTrace().last())
 println(StackTraceUtils.deepSanitize(new Exception()).getStackTrace())
 //jobname is Executor.java
-job('hello_world_external_1') {
+job(folderName + '/hello_world_external_1') {
   steps {
     shell('echo Hello 1, World External!')
   }
