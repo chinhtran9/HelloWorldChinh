@@ -24,7 +24,7 @@ job('seed_jobs') {
   }
   steps {
     dsl {
-      external('jobs_scripts/**/*.groovy')
+      external('job_scripts/**/*.groovy')
       removeAction('DELETE')
     }
   }
