@@ -1,5 +1,5 @@
 // Provided for completeness
-def folderName = 'devops_build'
+def folderName = 'release_train'
 def jobconfig = """
 <flow-definition plugin="workflow-job@2.40">
   <actions>
@@ -10,9 +10,8 @@ def jobconfig = """
       </jobProperties>
       <triggers/>
       <parameters>
-        <string>container</string>
-        <string>kanikoPath</string>
-        <string>tag</string>
+        <string>pushArtifacts</string>
+        <string>dockerRegistry</string>
         <string>buildRef</string>
       </parameters>
       <options>
@@ -38,25 +37,22 @@ def jobconfig = """
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
         <hudson.model.StringParameterDefinition>
-          <name>container</name>
-          <description>Path to the dockerfile within the dockerfile repo minus the file</description>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>kanikoPath</name>
-          <description>Pather after abrp-mbrcatalyst-docker-release-local. i.e. tools</description>
+          <name>dockerRegistry</name>
+          <description>Docker registry to push to, note that this requires a secret to be stored for the builder</description>
+          <defaultValue>artifactory.devtest.atohdtnet.gov.au</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>buildRef</name>
-          <description>Branch to build</description>
+          <description>Branch to be built</description>
+          <defaultValue>refs/heads/master</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>tag</name>
-          <description>The tag to use for the container image</description>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>pushArtifacts</name>
+          <description>Push build to maven and dockerRegistry, defaults to false</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
@@ -65,7 +61,7 @@ def jobconfig = """
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
-          <url>ssh://atotfs01.developer.atodnet.gov.au:22/tfs/TPC01/EST/_git/mbr-container-builds</url>
+          <url>ssh://atotfs01.developer.atodnet.gov.au:22/tfs/TPC01/EST/_git/mbr-release-library</url>
           <credentialsId>svc_mbrtfs_sshkey</credentialsId>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
@@ -78,7 +74,7 @@ def jobconfig = """
       <submoduleCfg class="empty-list"/>
       <extensions/>
     </scm>
-    <scriptPath>Jenkinsfile</scriptPath>
+    <scriptPath>pipelines/integration/Jenkinsfile.groovy</scriptPath>
     <lightweight>false</lightweight>
   </definition>
   <triggers/>
@@ -100,7 +96,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/solution') {
+job(folderName + '/integration-libraries-pr') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

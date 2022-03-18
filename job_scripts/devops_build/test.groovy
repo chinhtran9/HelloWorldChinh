@@ -20,7 +20,7 @@ def jobconfig = """
       </options>
     </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
   </actions>
-  <description>Build a devops container image and add it to Artifactory under the path abrp-mbrcatalyst-docker-release-loca/tools</description>
+  <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <jenkins.model.BuildDiscarderProperty>
@@ -37,34 +37,24 @@ def jobconfig = """
     </com.sonyericsson.rebuild.RebuildSettings>
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        <hudson.model.ChoiceParameterDefinition>
+        <hudson.model.StringParameterDefinition>
           <name>container</name>
-          <description>The container image to be created</description>
-          <choices>
-            <string>fluent-rabbit</string>
-            <string>infrastructure-agent</string>
-            <string>jenkins-master</string>
-            <string>maven-agent</string>
-            <string>nginx</string>
-            <string>rabbitmq</string>
-            <string>tfs-agent</string>
-            <string>ub8-awscli</string>
-          </choices>
-        </hudson.model.ChoiceParameterDefinition>
+          <description>Path to the dockerfile within the dockerfile repo minus the file</description>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>kanikoPath</name>
-          <description>Path after abrp-mbrcatalyst-docker-release-local. i.e. tools</description>
-          <defaultValue>tools</defaultValue>
+          <description>Pather after abrp-mbrcatalyst-docker-release-local. i.e. tools</description>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>buildRef</name>
-          <description>Branch to create the container image from found in the mbr-container-builds repo</description>
+          <description>Branch to build</description>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>tag</name>
-          <description>The tag to set against the container image</description>
+          <description>The tag to use for the container image</description>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
@@ -81,7 +71,7 @@ def jobconfig = """
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>feature/dm-aurora-postgresql-image</name>
+          <name>master</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
@@ -92,7 +82,7 @@ def jobconfig = """
     <lightweight>false</lightweight>
   </definition>
   <triggers/>
-  <disabled>true</disabled>
+  <disabled>false</disabled>
 </flow-definition>
 """
 
@@ -110,7 +100,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/tools') {
+job(folderName + '/test') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

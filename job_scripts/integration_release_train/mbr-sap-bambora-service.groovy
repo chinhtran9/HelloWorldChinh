@@ -1,5 +1,5 @@
 // Provided for completeness
-def folderName = 'devops_build'
+def folderName = 'integration_release_train'
 def jobconfig = """
 <flow-definition plugin="workflow-job@2.40">
   <actions>
@@ -7,12 +7,11 @@ def jobconfig = """
     <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.8.4">
       <jobProperties>
         <string>jenkins.model.BuildDiscarderProperty</string>
+        <string>org.jenkinsci.plugins.workflow.job.properties.DisableResumeJobProperty</string>
       </jobProperties>
       <triggers/>
       <parameters>
-        <string>container</string>
-        <string>kanikoPath</string>
-        <string>tag</string>
+        <string>dockerRegistry</string>
         <string>buildRef</string>
       </parameters>
       <options>
@@ -20,51 +19,34 @@ def jobconfig = """
       </options>
     </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
   </actions>
-  <description>Build a devops container image and add it to Artifactory under the path abrp-mbrcatalyst-docker-release-loca/tools</description>
+  <description>mbr-bambora-camel-service</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <jenkins.model.BuildDiscarderProperty>
       <strategy class="hudson.tasks.LogRotator">
-        <daysToKeep>-1</daysToKeep>
-        <numToKeep>20</numToKeep>
-        <artifactDaysToKeep>-1</artifactDaysToKeep>
-        <artifactNumToKeep>20</artifactNumToKeep>
+        <daysToKeep>7</daysToKeep>
+        <numToKeep>-1</numToKeep>
+        <artifactDaysToKeep>7</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
       </strategy>
     </jenkins.model.BuildDiscarderProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.DisableResumeJobProperty/>
     <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.31">
       <autoRebuild>false</autoRebuild>
       <rebuildDisabled>false</rebuildDisabled>
     </com.sonyericsson.rebuild.RebuildSettings>
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        <hudson.model.ChoiceParameterDefinition>
-          <name>container</name>
-          <description>The container image to be created</description>
-          <choices>
-            <string>fluent-rabbit</string>
-            <string>infrastructure-agent</string>
-            <string>jenkins-master</string>
-            <string>maven-agent</string>
-            <string>nginx</string>
-            <string>rabbitmq</string>
-            <string>tfs-agent</string>
-            <string>ub8-awscli</string>
-          </choices>
-        </hudson.model.ChoiceParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>kanikoPath</name>
-          <description>Path after abrp-mbrcatalyst-docker-release-local. i.e. tools</description>
-          <defaultValue>tools</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>buildRef</name>
-          <description>Branch to create the container image from found in the mbr-container-builds repo</description>
+          <description>Branch to be built</description>
+          <defaultValue>refs/heads/develop</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>tag</name>
-          <description>The tag to set against the container image</description>
+          <name>dockerRegistry</name>
+          <description>Docker registry to push to, note that this requires a secret to be stored for the builder</description>
+          <defaultValue>artifactory.devtest.atohdtnet.gov.au</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
@@ -75,24 +57,24 @@ def jobconfig = """
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
-          <url>ssh://atotfs01.developer.atodnet.gov.au:22/tfs/TPC01/EST/_git/mbr-container-builds</url>
+          <url>ssh://atotfs01.developer.atodnet.gov.au:22/tfs/TPC01/EST/_git/mbr-release-library</url>
           <credentialsId>svc_mbrtfs_sshkey</credentialsId>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>feature/dm-aurora-postgresql-image</name>
+          <name>feature/integration-team-pipelines</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
       <submoduleCfg class="empty-list"/>
       <extensions/>
     </scm>
-    <scriptPath>Jenkinsfile</scriptPath>
-    <lightweight>false</lightweight>
+    <scriptPath>pipelines/camelapps/Jenkinsfile.groovy</scriptPath>
+    <lightweight>true</lightweight>
   </definition>
   <triggers/>
-  <disabled>true</disabled>
+  <disabled>false</disabled>
 </flow-definition>
 """
 
@@ -110,7 +92,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/tools') {
+job(folderName + '/mbr-sap-bambora-service') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->
