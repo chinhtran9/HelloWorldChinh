@@ -44,14 +44,14 @@ def jobconfig = """
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>feature/moveIntegrationLibJenkins</name>
+          <name>feature/pipelines</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
       <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>pipelines/shared/Jenkinsfile-CREATE-HOTFIX.groovy</scriptPath>
+    <scriptPath>pipelines/mbr/Jenkinsfile-CREATE-HOTFIX.groovy</scriptPath>
     <lightweight>true</lightweight>
   </definition>
   <triggers/>
@@ -73,7 +73,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/TEST-integration-libs-create-hotfix') {
+job(folderName + '/TEST_director_config_create_hotfix') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

@@ -1,5 +1,5 @@
 // Provided for completeness
-def folderName = 'release_train'
+def folderName = 'integration_release_train'
 def jobconfig = """
 <flow-definition plugin="workflow-job@2.40">
   <actions>
@@ -7,10 +7,10 @@ def jobconfig = """
     <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.8.4">
       <jobProperties>
         <string>jenkins.model.BuildDiscarderProperty</string>
+        <string>org.jenkinsci.plugins.workflow.job.properties.DisableResumeJobProperty</string>
       </jobProperties>
       <triggers/>
       <parameters>
-        <string>pushArtifacts</string>
         <string>dockerRegistry</string>
         <string>buildRef</string>
       </parameters>
@@ -24,12 +24,13 @@ def jobconfig = """
   <properties>
     <jenkins.model.BuildDiscarderProperty>
       <strategy class="hudson.tasks.LogRotator">
-        <daysToKeep>-1</daysToKeep>
-        <numToKeep>20</numToKeep>
-        <artifactDaysToKeep>-1</artifactDaysToKeep>
-        <artifactNumToKeep>20</artifactNumToKeep>
+        <daysToKeep>7</daysToKeep>
+        <numToKeep>-1</numToKeep>
+        <artifactDaysToKeep>7</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
       </strategy>
     </jenkins.model.BuildDiscarderProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.DisableResumeJobProperty/>
     <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.31">
       <autoRebuild>false</autoRebuild>
       <rebuildDisabled>false</rebuildDisabled>
@@ -37,22 +38,17 @@ def jobconfig = """
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
         <hudson.model.StringParameterDefinition>
+          <name>buildRef</name>
+          <description>Branch to be built</description>
+          <defaultValue>refs/heads/develop</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
           <name>dockerRegistry</name>
           <description>Docker registry to push to, note that this requires a secret to be stored for the builder</description>
           <defaultValue>artifactory.devtest.atohdtnet.gov.au</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>buildRef</name>
-          <description>Branch to be built</description>
-          <defaultValue>refs/heads/master</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>pushArtifacts</name>
-          <description>Push build to maven and dockerRegistry, defaults to false</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
@@ -67,15 +63,15 @@ def jobconfig = """
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>master</name>
+          <name>feature/integration-team-pipelines</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-      <submoduleCfg class="empty-list"/>
+      <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>pipelines/integration/Jenkinsfile.groovy</scriptPath>
-    <lightweight>false</lightweight>
+    <scriptPath>pipelines/camelapps/Jenkinsfile.groovy</scriptPath>
+    <lightweight>true</lightweight>
   </definition>
   <triggers/>
   <disabled>false</disabled>
@@ -96,7 +92,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/integration-libraries-pr') {
+job(folderName + '/mbr_technical_architecture') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

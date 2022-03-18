@@ -92,7 +92,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/mbr-sap-bambora-service') {
+job(folderName + '/mbr_sap_bambora_service') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

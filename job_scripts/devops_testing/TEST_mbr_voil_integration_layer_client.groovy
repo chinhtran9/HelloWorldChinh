@@ -1,23 +1,17 @@
 // Provided for completeness
-def folderName = 'release_train'
+def folderName = 'devops_testing'
 def jobconfig = """
 <flow-definition plugin="workflow-job@2.40">
   <actions>
-    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.8.4"/>
-    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.8.4">
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.7.2"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.7.2">
       <jobProperties>
         <string>jenkins.model.BuildDiscarderProperty</string>
         <string>org.jenkinsci.plugins.workflow.job.properties.DisableResumeJobProperty</string>
       </jobProperties>
       <triggers/>
       <parameters>
-        <string>skipPersonsTests</string>
-        <string>skipCompaniesTests</string>
-        <string>skipTests</string>
-        <string>retainEnvironment</string>
-        <string>cleanData</string>
         <string>buildRef</string>
-        <string>skipCommonTests</string>
       </parameters>
       <options>
         <string>skipDefaultCheckout</string>
@@ -42,36 +36,6 @@ def jobconfig = """
     </com.sonyericsson.rebuild.RebuildSettings>
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipTests</name>
-          <description>Skips all testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipCompaniesTests</name>
-          <description>Skips companies ui testing if required</description>
-          <defaultValue>true</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipCommonTests</name>
-          <description>Skips common ui testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipPersonsTests</name>
-          <description>Skips persons ui testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>retainEnvironment</name>
-          <description>Deploy catalyst and keep environment after testing</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>cleanData</name>
-          <description>Clean Mongo and Elastic each build</description>
-          <defaultValue>true</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>buildRef</name>
           <description>Branch to be built</description>
@@ -82,7 +46,7 @@ def jobconfig = """
     </hudson.model.ParametersDefinitionProperty>
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.90">
-    <scm class="hudson.plugins.git.GitSCM" plugin="git@4.7.0">
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@4.2.2">
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
@@ -92,15 +56,15 @@ def jobconfig = """
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>maven-central</name>
+          <name>feature/integration-team-pipelines</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-      <submoduleCfg class="empty-list"/>
+      <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>pipelines/mbr/Jenkinsfile.groovy</scriptPath>
-    <lightweight>false</lightweight>
+    <scriptPath>pipelines/camelapps/Jenkinsfile.groovy</scriptPath>
+    <lightweight>true</lightweight>
   </definition>
   <triggers/>
   <disabled>false</disabled>
@@ -121,7 +85,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/director-config-ci') {
+job(folderName + '/TEST_mbr_voil_integration_layer_client') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

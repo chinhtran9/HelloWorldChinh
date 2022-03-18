@@ -92,7 +92,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/mbr-voil-openapi-camel-service') {
+job(folderName + '/mbr_voil_integration_layer_client') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

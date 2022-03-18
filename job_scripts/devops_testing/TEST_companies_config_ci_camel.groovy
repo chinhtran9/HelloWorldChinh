@@ -69,7 +69,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/TEST-companies-config-ci-camel') {
+job(folderName + '/TEST_companies_config_ci_camel') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

@@ -1,17 +1,16 @@
 // Provided for completeness
-def folderName = 'integration_release_train'
+def folderName = 'devops_testing'
 def jobconfig = """
 <flow-definition plugin="workflow-job@2.40">
   <actions>
-    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.8.4"/>
-    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.8.4">
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.7.2"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.7.2">
       <jobProperties>
         <string>jenkins.model.BuildDiscarderProperty</string>
         <string>org.jenkinsci.plugins.workflow.job.properties.DisableResumeJobProperty</string>
       </jobProperties>
       <triggers/>
       <parameters>
-        <string>dockerRegistry</string>
         <string>buildRef</string>
       </parameters>
       <options>
@@ -19,7 +18,7 @@ def jobconfig = """
       </options>
     </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
   </actions>
-  <description>mbr-asic-camel-service</description>
+  <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <jenkins.model.BuildDiscarderProperty>
@@ -43,17 +42,11 @@ def jobconfig = """
           <defaultValue>refs/heads/develop</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>dockerRegistry</name>
-          <description>Docker registry to push to, note that this requires a secret to be stored for the builder</description>
-          <defaultValue>artifactory.devtest.atohdtnet.gov.au</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.90">
-    <scm class="hudson.plugins.git.GitSCM" plugin="git@4.7.0">
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@4.2.2">
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
@@ -67,7 +60,7 @@ def jobconfig = """
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-      <submoduleCfg class="empty-list"/>
+      <submoduleCfg class="list"/>
       <extensions/>
     </scm>
     <scriptPath>pipelines/camelapps/Jenkinsfile.groovy</scriptPath>
@@ -92,7 +85,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/mbr-sap-camel-service') {
+job(folderName + '/TEST_mbr_technical_architecture') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

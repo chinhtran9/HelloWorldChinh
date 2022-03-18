@@ -1,88 +1,27 @@
 // Provided for completeness
-def folderName = 'devops_testing'
+def folderName = 'integration_release_train'
 def jobconfig = """
 <flow-definition plugin="workflow-job@2.40">
   <actions>
     <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.8.4"/>
     <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.8.4">
       <jobProperties>
-        <string>org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty</string>
         <string>jenkins.model.BuildDiscarderProperty</string>
         <string>org.jenkinsci.plugins.workflow.job.properties.DisableResumeJobProperty</string>
       </jobProperties>
       <triggers/>
       <parameters>
-        <string>skipPersonsTests</string>
-        <string>dryRun</string>
-        <string>skipCompaniesTests</string>
-        <string>skipTests</string>
-        <string>skipStartRelease</string>
+        <string>dockerRegistry</string>
         <string>buildRef</string>
-        <string>versionDigitToIncrement</string>
-        <string>skipCommonTests</string>
       </parameters>
       <options>
         <string>skipDefaultCheckout</string>
       </options>
     </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
   </actions>
-  <description></description>
+  <description>mbr-asic-camel-service</description>
   <keepDependencies>false</keepDependencies>
   <properties>
-    <org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty/>
-    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.31">
-      <autoRebuild>false</autoRebuild>
-      <rebuildDisabled>false</rebuildDisabled>
-    </com.sonyericsson.rebuild.RebuildSettings>
-    <hudson.model.ParametersDefinitionProperty>
-      <parameterDefinitions>
-        <hudson.model.ChoiceParameterDefinition>
-          <name>versionDigitToIncrement</name>
-          <description>Version digit to increment for development update, 0 is major, 1 is minor, 2 is hotfix, defaults to 1 (minor)</description>
-          <choices>
-            <string>1</string>
-            <string>0</string>
-            <string>2</string>
-          </choices>
-        </hudson.model.ChoiceParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipStartRelease</name>
-          <description>Skip Start Release Branch - assumes the buildRef is the release branch</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipTests</name>
-          <description>Skips all testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipCompaniesTests</name>
-          <description>Skips companies ui testing if required</description>
-          <defaultValue>true</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipCommonTests</name>
-          <description>Skips common ui testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipPersonsTests</name>
-          <description>Skips persons ui testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>dryRun</name>
-          <description>Dry Run, don&apos;t push tags and docker builds</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.StringParameterDefinition>
-          <name>buildRef</name>
-          <description>Branch to be built</description>
-          <defaultValue>refs/heads/develop</defaultValue>
-          <trim>false</trim>
-        </hudson.model.StringParameterDefinition>
-      </parameterDefinitions>
-    </hudson.model.ParametersDefinitionProperty>
     <jenkins.model.BuildDiscarderProperty>
       <strategy class="hudson.tasks.LogRotator">
         <daysToKeep>7</daysToKeep>
@@ -92,6 +31,26 @@ def jobconfig = """
       </strategy>
     </jenkins.model.BuildDiscarderProperty>
     <org.jenkinsci.plugins.workflow.job.properties.DisableResumeJobProperty/>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.31">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>buildRef</name>
+          <description>Branch to be built</description>
+          <defaultValue>refs/heads/develop</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>dockerRegistry</name>
+          <description>Docker registry to push to, note that this requires a secret to be stored for the builder</description>
+          <defaultValue>artifactory.devtest.atohdtnet.gov.au</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.90">
     <scm class="hudson.plugins.git.GitSCM" plugin="git@4.7.0">
@@ -104,14 +63,14 @@ def jobconfig = """
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>feature/prepareCompaniesRelease</name>
+          <name>feature/integration-team-pipelines</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-      <submoduleCfg class="empty-list"/>
+      <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>pipelines/mbr/Jenkinsfile-RELEASE.groovy</scriptPath>
+    <scriptPath>pipelines/camelapps/Jenkinsfile.groovy</scriptPath>
     <lightweight>true</lightweight>
   </definition>
   <triggers/>
@@ -133,7 +92,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/TEST-companies-config-release') {
+job(folderName + '/mbr_asic_camel_service') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

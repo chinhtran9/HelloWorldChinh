@@ -1,5 +1,5 @@
 // Provided for completeness
-def folderName = 'release_train'
+def folderName = 'integration_release_train'
 def jobconfig = """
 <flow-definition plugin="workflow-job@2.40">
   <actions>
@@ -11,14 +11,8 @@ def jobconfig = """
       </jobProperties>
       <triggers/>
       <parameters>
-        <string>skipPersonsTests</string>
-        <string>targetRef</string>
-        <string>skipCompaniesTests</string>
-        <string>skipTests</string>
-        <string>retainEnvironment</string>
-        <string>cleanData</string>
+        <string>dockerRegistry</string>
         <string>buildRef</string>
-        <string>skipCommonTests</string>
       </parameters>
       <options>
         <string>skipDefaultCheckout</string>
@@ -43,36 +37,6 @@ def jobconfig = """
     </com.sonyericsson.rebuild.RebuildSettings>
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipTests</name>
-          <description>Skips all testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipCompaniesTests</name>
-          <description>Skips companies ui testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipCommonTests</name>
-          <description>Skips common ui testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>skipPersonsTests</name>
-          <description>Skips persons ui testing if required</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>retainEnvironment</name>
-          <description>Deploy catalyst and keep environment after testing</description>
-          <defaultValue>false</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
-        <hudson.model.BooleanParameterDefinition>
-          <name>cleanData</name>
-          <description>Clean Mongo and Elastic each build</description>
-          <defaultValue>true</defaultValue>
-        </hudson.model.BooleanParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>buildRef</name>
           <description>Branch to be built</description>
@@ -80,9 +44,9 @@ def jobconfig = """
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>targetRef</name>
-          <description>Target branch to diff for tests</description>
-          <defaultValue>refs/heads/develop</defaultValue>
+          <name>dockerRegistry</name>
+          <description>Docker registry to push to, note that this requires a secret to be stored for the builder</description>
+          <defaultValue>artifactory.devtest.atohdtnet.gov.au</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
@@ -99,15 +63,15 @@ def jobconfig = """
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>feature/companies-temp</name>
+          <name>feature/integration-team-pipelines</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
       <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>pipelines/mbr/Jenkinsfile.groovy</scriptPath>
-    <lightweight>false</lightweight>
+    <scriptPath>pipelines/camelapps/Jenkinsfile.groovy</scriptPath>
+    <lightweight>true</lightweight>
   </definition>
   <triggers/>
   <disabled>false</disabled>
@@ -128,7 +92,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/companies-config-pr') {
+job(folderName + '/mbr_voil_openapi_camel_service') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->

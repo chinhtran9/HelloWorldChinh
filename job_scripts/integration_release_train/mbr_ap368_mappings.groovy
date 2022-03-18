@@ -19,7 +19,7 @@ def jobconfig = """
       </options>
     </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
   </actions>
-  <description></description>
+  <description>mbr-ap368-mappings</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <jenkins.model.BuildDiscarderProperty>
@@ -92,7 +92,7 @@ def jobconfig = """
 
 def jobconfignode = new XmlParser().parseText(jobconfig)
 
-job(folderName + '/mbr-technical-architecture') {
+job(folderName + '/mbr_ap368_mappings') {
     configure { node ->
         // node represents <project>
         jobconfignode.each { child ->
