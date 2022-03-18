@@ -1,7 +1,3 @@
-/*GroovyShell shell = new GroovyShell()
-def variables = shell.parse(new File('variables.groovy'))
-echo(variables.devops_build_folder + "  -----")
-*/
 def tfs = 'https://github.com/chinhtran9/HelloWorldChinh.git'
 
 folder('devops_build') {
@@ -20,9 +16,9 @@ folder('integration_release_train') {
     description('add integration_release_train description')
 }
 
-println ('build jobs and views')
+println('create seed job')
 
-job('seed_job') {
+job('seed_jobs') {
   scm {
       git(tfs)
   }
@@ -34,13 +30,20 @@ job('seed_job') {
   }
 }
 
+
+println('create build_view')
+
+
 job('build_view') {
   scm {
       git(tfs)
   }
   steps {
     dsl {
+     
       external('jobs_scripts/build_view.groovy')
     }
   }
 }
+
+println('Completed')
