@@ -41,7 +41,7 @@ job('build_view') {
   steps {
     dsl {
      
-      external('jobs_scripts/build_view.groovy')
+      external('job_scripts/build_view.groovy')
     }
   }
 }
