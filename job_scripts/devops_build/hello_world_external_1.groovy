@@ -11,7 +11,7 @@ def withoutExt = scriptName.take(scriptName.lastIndexOf('.'))
 
 println(withoutExt + 'sdfdfd')
 
-job(hello_world_external_1') {
+job('hello_world_external_1' + withoutExt) {
   steps {
     shell('echo Hello 1, World External!')
   }
