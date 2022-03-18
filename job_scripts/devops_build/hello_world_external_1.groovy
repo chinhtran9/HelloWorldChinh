@@ -1,17 +1,13 @@
+import org.codehaus.groovy.runtime.StackTraceUtils
 def folderName = 'devops_build'
 def tfs = 'https://github.com/chinhtran9/HelloWorldChinh.git'
 
-File scriptFile = new File(getClass().protectionDomain.codeSource.location.path)
+def jobName = StackTraceUtils.deepSanitize(new Exception()).getStackTrace().last().getFileName()
 
-// This holds the file name like "myscript.groovy"
-def scriptName = scriptFile.getName()
+println(StackTraceUtils.deepSanitize(new Exception()).getStackTrace().last())
+println(StackTraceUtils.deepSanitize(new Exception()).getStackTrace())
 
-// strip the extension to get "myscript"
-def withoutExt = scriptName.take(scriptName.lastIndexOf('.'))
-
-println(withoutExt + 'sdfdfd')
-
-job('hello_world_external_1' + withoutExt) {
+job(jobName) {
   steps {
     shell('echo Hello 1, World External!')
   }
