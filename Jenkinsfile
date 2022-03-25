@@ -6,31 +6,21 @@ pipeline {
         }
     }
 
-    options {
-        buildDiscarder logRotator( 
-                    daysToKeepStr: '16', 
-                    numToKeepStr: '10'
-            )
+    stage('Cleanup Workspace') {
+        steps {
+            cleanWs()
+            sh """
+            echo "Cleaned Up Workspace For Project"
+            """
+        }
     }
 
-    stages {
-        
-        stage('Cleanup Workspace') {
-            steps {
-                cleanWs()
-                sh """
-                echo "Cleaned Up Workspace For Project"
-                """
+    stage('Build docker image12') {
+        steps {
+            script{
+                sh 'docker build -t dockerImage .'
             }
         }
+    }
 
-        stage('Build docker image12') {
-            steps {
-                script{
-                    sh 'docker build -t dockerImage .'
-                }
-            }
-        }
-
-    }   
 }
