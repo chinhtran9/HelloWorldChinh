@@ -1,31 +1,4 @@
 pipeline {
-
-    agent {
-        node {
-            label 'main'
-        }
-    }
-
-    stage('Cleanup Workspace') {
-        steps {
-            cleanWs()
-            sh """
-            echo "Cleaned Up Workspace For Project"
-            """
-        }
-    }
-
-    stage('Build docker image1') {
-        steps {
-            script{
-                sh 'docker build -t dockerImage .'
-            }
-        }
-    }
-
-}
-
-pipeline {
     agent any
     stages {
         stage('inti') {
@@ -35,13 +8,13 @@ pipeline {
         }
         stage('Build docker image1') {
             steps {
-                 echo 'Build docker image'
-              /*  script{
+                echo 'Build docker image'
+            /*  script{
                     sh 'docker build -t dockerImage .'
                 }
                 */
             }
-    }
+        }
     }
     post {
         always {
