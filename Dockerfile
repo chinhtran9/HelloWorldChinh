@@ -1,7 +1,8 @@
 # Pull base image 
-From tomcat:8-jre8 
+From tomcat:jre8-temurin
 
 # Maintainer 
-MAINTAINER "valaxytech@gmail.com" 
-COPY ./webapp.war /usr/local/tomcat/webapps
-
+LABEL maintainer="valaxytech@gmail.com" 
+ADD webapp.war /usr/local/tomcat/webapps
+EXPOSE 8080
+CMD ["/usr/local/tomcat/bin/catalina.sh", "run"]
