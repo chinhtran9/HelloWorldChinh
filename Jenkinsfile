@@ -15,7 +15,7 @@ pipeline {
         }
     }
 
-    stage('Build docker image12') {
+    stage('Build docker image1') {
         steps {
             script{
                 sh 'docker build -t dockerImage .'
