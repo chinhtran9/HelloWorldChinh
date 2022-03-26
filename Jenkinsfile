@@ -3,18 +3,18 @@ pipeline {
     agent any
 
     stages {
-        stage('build') {
+        stage('init') {
             steps {
                 echo 'init step'
             }
         }
-        stage('test') {
+        stage('build') {
             steps {
                 echo 'Build docker image'
-            /*  script{
+                script{
                     sh 'docker build -t dockerImage .'
                 }
-                */
+               
             }
         }
     } 
